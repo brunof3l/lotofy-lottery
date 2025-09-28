@@ -1,8 +1,8 @@
 // lib/supabase/server.ts
-import { cookies } from "next/headers"
-import { createServerClient } from "@supabase/ssr"
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
-export function createServerSupabaseClient() {
+export const createClient = () => {
   const cookieStore = cookies()
 
   return createServerClient(
@@ -13,11 +13,23 @@ export function createServerSupabaseClient() {
         get(name: string) {
           return cookieStore.get(name)?.value
         },
-        set() {
-          // cookies são read-only no server
+        set(name: string, value: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value, ...options })
+          } catch (error) {
+            // The `set` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
         },
-        remove() {
-          // idem
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value: '', ...options })
+          } catch (error) {
+            // The `delete` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
         },
       },
     }
