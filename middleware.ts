@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
     response,
   })
 
+  // Atualiza a sessão (essencial para manter o usuário logado)
   await supabase.auth.getSession()
 
   return response
@@ -24,10 +25,10 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * Corresponde a todos os caminhos, exceto os que começam com:
+     * - _next/static (arquivos estáticos)
+     * - _next/image (arquivos de otimização de imagem)
+     * - favicon.ico (arquivo de favicon)
      */
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
