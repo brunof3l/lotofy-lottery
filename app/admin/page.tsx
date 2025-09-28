@@ -1,22 +1,18 @@
 import { redirect } from "next/navigation"
-export const dynamic = "force-dynamic"
-import { getServerSupabase } from "@/lib/supabase/server"
-import { AdminDashboard } from "@/components/admin/admin-dashboard"
-import { AdminHeader } from "@/components/admin/admin-header"
+import { createServerSupabaseClient } from "@/lib/supabase/server"
 
 export default async function AdminPage() {
-  const supabase = getServerSupabase()
+  const supabase = createServerSupabaseClient()
 
   const {
     data: { user },
-    error: userError,
   } = await supabase.auth.getUser()
 
-  if (userError || !user) {
+  if (!user) {
     redirect("/auth/login")
   }
 
-  // Checar se é admin
+  // Verifica se é admin
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
@@ -27,12 +23,5 @@ export default async function AdminPage() {
     redirect("/dashboard")
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <AdminHeader />
-      <main className="container mx-auto px-4 py-8">
-        <AdminDashboard />
-      </main>
-    </div>
-  )
+  return <div>Área restrita do Admin ✅</div>
 }
