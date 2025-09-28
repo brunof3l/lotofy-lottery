@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
-import { createServerClient } from "@/lib/supabase/server"
+import { getServerSupabase } from "@/lib/supabase/server"
 import { AdminDashboard } from "@/components/admin/admin-dashboard"
 import { AdminHeader } from "@/components/admin/admin-header"
 
 export default async function AdminPage() {
-  const supabase = await createServerClient()
+  const supabase = getServerSupabase()
 
   const {
     data: { user },
@@ -16,8 +16,12 @@ export default async function AdminPage() {
     redirect("/auth/login")
   }
 
-  // Check if user is admin
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  // Checar se é admin
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single()
 
   if (!profile || profile.role !== "admin") {
     redirect("/dashboard")

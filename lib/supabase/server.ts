@@ -1,7 +1,7 @@
-import { createServerClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 
-export const createClient = () => {
+export function getServerSupabase() {
   const cookieStore = cookies()
 
   return createServerClient(
@@ -12,19 +12,11 @@ export const createClient = () => {
         get(name: string) {
           return cookieStore.get(name)?.value
         },
-        set(name: string, value: string, options) {
-          try {
-            cookieStore.set({ name, value, ...options })
-          } catch (error) {
-            // Ocorre em Server Actions, pode ser ignorado.
-          }
+        set() {
+          // cookies no server são read-only no Next 13+
         },
-        remove(name: string, options) {
-          try {
-            cookieStore.set({ name, value: '', ...options })
-          } catch (error) {
-            // Ocorre em Server Actions, pode ser ignorado.
-          }
+        remove() {
+          // idem
         },
       },
     }
