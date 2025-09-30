@@ -186,11 +186,11 @@ export class CaixaApiService {
       // Inserir no banco
       const { data, error } = await supabase
         .from('lottery_results')
-        .insert({
+        .upsert({
           contest_number: latestResult.contest_number,
           draw_date: latestResult.draw_date,
           numbers: latestResult.numbers,
-        })
+        }, { onConflict: 'contest_number' })
         .select()
         .single()
 
