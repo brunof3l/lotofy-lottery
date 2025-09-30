@@ -24,8 +24,9 @@ export async function GET(request: NextRequest) {
     const latestCaixa = await CaixaApiService.getLatestResult()
 
     // 3) Se não houver dados no banco ou se a Caixa estiver com concurso mais novo, upsert
+    let upsertFailed = false
     if (latestCaixa && (!latestDb || latestCaixa.contest_number > latestDb.contest_number)) {
-      await admin
+      const { error: upsertError } = await admin
         .from("lottery_results")
         .upsert(
           {
@@ -35,6 +36,10 @@ export async function GET(request: NextRequest) {
           },
           { onConflict: "contest_number" }
         )
+      if (upsertError) {
+        upsertFailed = true
+        console.error('Upsert lottery_results falhou:', upsertError.message || upsertError)
+      }
     }
 
     // 4) Retornar a lista atualizada
@@ -46,7 +51,25 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    return NextResponse.json({ data })
+    // Se o upsert falhou por permissão mas temos latest da Caixa, injeta no topo para exibição.
+    let finalData = data || []
+    if (upsertFailed && latestCaixa) {
+      const exists = finalData.some(r => r.contest_number === latestCaixa.contest_number)
+      if (!exists) {
+        finalData = [
+          {
+            id: 'volatile',
+            contest_number: latestCaixa.contest_number,
+            draw_date: latestCaixa.draw_date,
+            numbers: latestCaixa.numbers,
+            created_at: new Date().toISOString(),
+          },
+          ...finalData,
+        ]
+      }
+    }
+
+    return NextResponse.json({ data: finalData })
   } catch (error) {
     console.error("Error fetching lottery results:", error)
     return NextResponse.json({ error: "Failed to fetch lottery results" }, { status: 500 })

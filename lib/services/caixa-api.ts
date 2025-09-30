@@ -195,7 +195,10 @@ export class CaixaApiService {
         .single()
 
       if (error) {
-        throw error
+        return {
+          success: false,
+          message: (error as any)?.message || 'Erro de escrita no Supabase (talvez RLS sem service role)'
+        }
       }
 
       return {
