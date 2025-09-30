@@ -1,19 +1,35 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { CaixaApiService } from "@/lib/services/caixa-api"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient()
+  const admin = createAdminClient()
   const { searchParams } = new URL(request.url)
   const limit = searchParams.get("limit") || "10"
 
   try {
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from("lottery_results")
       .select("*")
       .order("contest_number", { ascending: false })
       .limit(Number.parseInt(limit))
 
     if (error) throw error
+
+    // Se não houver resultados ainda, sincroniza o último automaticamente
+    if (!data || data.length === 0) {
+      const sync = await CaixaApiService.syncLatestResult(admin)
+      if (sync.success) {
+        const res = await supabase
+          .from("lottery_results")
+          .select("*")
+          .order("contest_number", { ascending: false })
+          .limit(Number.parseInt(limit))
+        data = res.data ?? []
+      }
+    }
 
     return NextResponse.json({ data })
   } catch (error) {
@@ -23,16 +39,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient()
+  const admin = createAdminClient()
 
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
+    // Agora criação via service role; sem exigir autenticação do usuário
     const body = await request.json()
     const { contest_number, draw_date, numbers } = body
 
@@ -41,7 +51,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid input data" }, { status: 400 })
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await admin
       .from("lottery_results")
       .insert({
         contest_number,
