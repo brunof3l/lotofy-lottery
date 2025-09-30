@@ -1,0 +1,58 @@
+backend/
+  src/
+    app.js           // Express app principal
+    routes/
+      concursos.js   // Endpoints concursos
+      estatisticas.js// Endpoints estatísticas
+      gerador.js     // Endpoints gerador
+      user.js        // Endpoints usuário
+    services/
+      supabase.js    // Integração Supabase
+      ingestao.js    // Lógica ingestão/sync
+      auth.js        // JWT/Supabase Auth
+      estatisticas.js// Cálculo estatísticas
+      gerador.js     // Algoritmos geração
+    tests/
+      freq.test.js   // Testes unitários frequência
+      api.test.js    // Testes integração API
+    utils/
+      rateLimit.js   // Middleware rate limiting
+      security.js    // Helpers segurança
+  package.json       // Dependências backend
+  README.md          // Instruções backend
+
+frontend/
+  pages/
+    index.tsx        // Home
+    login.tsx        // Login
+    cadastro.tsx     // Cadastro
+    dashboard.tsx    // Dashboard
+    gerador.tsx      // Gerador
+    historico.tsx    // Histórico usuário
+    consulta.tsx     // Consulta concursos
+    precos.tsx       // Página de preços
+  components/
+    AuthForm.tsx     // Formulário auth
+    ConcursoCard.tsx // Card concurso
+    GeradorModal.tsx // Modal geração
+    Estatisticas.tsx // Gráficos
+    Header.tsx       // Navegação
+    Footer.tsx       // Rodapé
+  styles/
+    ...              // CSS/Styled Components
+  utils/
+    supabaseClient.ts// Instância Supabase
+  README.md          // Instruções frontend
+  package.json       // Dependências frontend
+
+scripts/
+  ingestao.js        // Script ingestão XLS/API
+  syncDaily.js       // Script cron diário
+  README.md          // Instruções scripts
+
+amostras/
+  concursos.json     // 5 concursos exemplo
+  geracoes.json      // 3 estratégias exemplo
+
+.env.example         // Variáveis ambiente
+README.md            // Instruções gerais

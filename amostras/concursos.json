@@ -1,0 +1,57 @@
+[
+  {
+    "numeroDoConcurso": 3498,
+    "dataApuracao": "2025-09-27",
+    "dezenas": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    "premiacao": {
+      "faixas": [
+        {"acertos":15,"ganhadores":0,"valor":0.0},
+        {"acertos":14,"ganhadores":10,"valor":1200.0}
+      ]
+    }
+  },
+  {
+    "numeroDoConcurso": 3497,
+    "dataApuracao": "2025-09-25",
+    "dezenas": [2,4,6,8,10,12,14,16,18,20,22,24,1,3,5],
+    "premiacao": {
+      "faixas": [
+        {"acertos":15,"ganhadores":1,"valor":1500000.0},
+        {"acertos":14,"ganhadores":12,"valor":1100.0}
+      ]
+    }
+  },
+  {
+    "numeroDoConcurso": 3496,
+    "dataApuracao": "2025-09-23",
+    "dezenas": [3,5,7,9,11,13,15,17,19,21,23,25,2,4,6],
+    "premiacao": {
+      "faixas": [
+        {"acertos":15,"ganhadores":2,"valor":800000.0},
+        {"acertos":14,"ganhadores":15,"valor":1000.0}
+      ]
+    }
+  },
+  {
+    "numeroDoConcurso": 3495,
+    "dataApuracao": "2025-09-21",
+    "dezenas": [5,10,15,20,25,1,6,11,16,21,2,7,12,17,22],
+    "premiacao": {
+      "faixas": [
+        {"acertos":15,"ganhadores":0,"valor":0.0},
+        {"acertos":14,"ganhadores":8,"valor":1300.0}
+      ]
+    }
+  },
+  {
+    "numeroDoConcurso": 3494,
+    "dataApuracao": "2025-09-19",
+    "dezenas": [1,3,5,7,9,11,13,15,17,19,21,23,25,2,4],
+    "premiacao": {
+      "faixas": [
+        {"acertos":15,"ganhadores":3,"valor":900000.0},
+        {"acertos":14,"ganhadores":9,"valor":1250.0}
+      ]
+    }
+  }
+]

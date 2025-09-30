@@ -1,0 +1,11 @@
+// Estrutura inicial do projeto Lotofácil SaaS
+
+c:\Users\User\Documents\projeto lotofacil\backend\   // Node.js/Express ou Fastify
+c:\Users\User\Documents\projeto lotofacil\frontend\  // Next.js SPA
+c:\Users\User\Documents\projeto lotofacil\scripts\   // Ingestão, sync, exemplos
+c:\Users\User\Documents\projeto lotofacil\.env.example // Variáveis ambiente
+c:\Users\User\Documents\projeto lotofacil\README.md    // Documentação
+c:\Users\User\Documents\projeto lotofacil\docker-compose.yml // Dev local opcional
+c:\Users\User\Documents\projeto lotofacil\amostras\   // Dados de exemplo
+
+// ...criação das pastas e arquivos será feita nos próximos passos...
