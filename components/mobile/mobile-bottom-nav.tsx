@@ -18,8 +18,8 @@ export function MobileBottomNav() {
   const isActive = (href: string) => pathname === href
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border md:hidden z-40">
-      <div className="grid grid-cols-5 h-16">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border md:hidden z-40">
+      <div className="grid grid-cols-5 h-16 pb-[max(env(safe-area-inset-bottom),0px)]">
         {navItems.map((item) => {
           const Icon = item.icon
           return (

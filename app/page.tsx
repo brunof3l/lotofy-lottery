@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { BarChart3, TrendingUp, Target, Users, Brain, Shield, Star, Play, ArrowRight, Menu } from "lucide-react"
+import Image from "next/image"
+import { BarChart3, TrendingUp, Users, Brain, Shield, Star, Play, ArrowRight, Menu } from "lucide-react"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function HomePage() {
   return (
@@ -11,12 +13,13 @@ export default function HomePage() {
       <header className="border-b border-border/20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                <Target className="h-5 w-5 text-primary" />
-              </div>
+            <Link href="/" className="flex items-center space-x-3">
+<span className="relative inline-flex items-center">
+                <Image src="/lotofy-logo.svg" alt="Lotofy" width={32} height={32} priority className="h-8 w-8 dark:hidden" />
+                <Image src="/lotofy-logo-dark.svg" alt="Lotofy" width={32} height={32} priority className="h-8 w-8 hidden dark:block" />
+              </span>
               <span className="text-xl font-bold text-foreground tracking-tight">Lotofy</span>
-            </div>
+            </Link>
             <nav className="hidden md:flex items-center space-x-8">
               <Link
                 href="#features"
@@ -38,6 +41,7 @@ export default function HomePage() {
               </Link>
             </nav>
             <div className="flex items-center space-x-3">
+              <ThemeToggle />
               <Button variant="ghost" size="sm" className="hidden sm:inline-flex" asChild>
                 <Link href="/auth/login">Entrar</Link>
               </Button>
@@ -59,6 +63,9 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-16 sm:py-24 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/20" />
+        {/* decorative blobs */}
+        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-[40rem] rounded-full bg-gradient-to-r from-primary/30 to-accent/30 blur-3xl opacity-40" />
+        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-72 w-[32rem] rounded-full bg-gradient-to-r from-accent/20 to-primary/20 blur-3xl opacity-30" />
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
             <Badge variant="secondary" className="mb-6 sm:mb-8 bg-primary/10 text-primary border-primary/20">
@@ -66,7 +73,7 @@ export default function HomePage() {
               <span className="text-xs sm:text-sm">Análise Estatística Avançada</span>
             </Badge>
             <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl text-balance leading-[1.1]">
-              Previsões inteligentes para a <span className="text-primary">Lotofácil</span>
+              Previsões inteligentes para a <span className="bg-gradient-to-r from-primary via-accent to-primary/80 bg-clip-text text-transparent">Lotofácil</span>
             </h1>
             <p className="mt-6 sm:mt-8 text-lg sm:text-xl leading-relaxed text-muted-foreground text-pretty max-w-3xl mx-auto px-4 sm:px-0">
               Use o poder da análise estatística e inteligência artificial para fazer previsões mais assertivas na
@@ -379,9 +386,10 @@ export default function HomePage() {
           <div className="grid grid-cols-1 gap-8 sm:gap-12 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-4 sm:col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                  <Target className="h-5 w-5 text-primary" />
-                </div>
+<span className="relative inline-flex items-center">
+                <Image src="/lotofy-logo.svg" alt="Lotofy" width={32} height={32} className="h-8 w-8 dark:hidden" />
+                <Image src="/lotofy-logo-dark.svg" alt="Lotofy" width={32} height={32} className="h-8 w-8 hidden dark:block" />
+              </span>
                 <span className="text-xl font-bold text-foreground tracking-tight">Lotofy</span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">

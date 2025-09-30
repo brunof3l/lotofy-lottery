@@ -12,10 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Target, LogOut, Settings, User, Menu } from "lucide-react"
+import { LogOut, Settings, User, Menu } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 interface DashboardHeaderProps {
   user: any
@@ -47,9 +49,10 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/dashboard" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Target className="h-5 w-5 text-primary-foreground" />
-            </div>
+<span className="relative inline-flex items-center">
+            <Image src="/lotofy-logo.svg" alt="Lotofy" width={28} height={28} className="h-7 w-7 dark:hidden" />
+            <Image src="/lotofy-logo-dark.svg" alt="Lotofy" width={28} height={28} className="h-7 w-7 hidden dark:block" />
+          </span>
             <span className="text-xl font-bold text-foreground">Lotofy</span>
           </Link>
 
@@ -69,6 +72,7 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
           </nav>
 
           <div className="flex items-center space-x-2">
+            <ThemeToggle />
             {/* Mobile Navigation */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>

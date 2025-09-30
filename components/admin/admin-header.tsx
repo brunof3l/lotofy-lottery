@@ -11,9 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Shield, Settings, LogOut, BarChart3, Menu } from "lucide-react"
+import { Settings, LogOut, BarChart3, Menu } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export function AdminHeader() {
   const pathname = usePathname()
@@ -34,7 +36,10 @@ export function AdminHeader() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link href="/admin" className="flex items-center space-x-2">
-              <Shield className="h-6 w-6 text-primary" />
+<span className="relative inline-flex items-center">
+              <Image src="/lotofy-logo.svg" alt="Lotofy" width={24} height={24} className="h-6 w-6 dark:hidden" />
+              <Image src="/lotofy-logo-dark.svg" alt="Lotofy" width={24} height={24} className="h-6 w-6 hidden dark:block" />
+            </span>
               <span className="text-lg sm:text-xl font-bold">Lotofy Admin</span>
             </Link>
           </div>
@@ -55,6 +60,7 @@ export function AdminHeader() {
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-4">
+            <ThemeToggle />
             {/* Mobile Navigation */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
