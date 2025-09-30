@@ -7,29 +7,44 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient()
   const admin = createAdminClient()
   const { searchParams } = new URL(request.url)
-  const limit = searchParams.get("limit") || "10"
+  const limit = parseInt(searchParams.get("limit") || "10", 10)
 
   try {
-    let { data, error } = await supabase
+    // 1) Obter o maior contest_number já salvo
+    const { data: latestDb, error: latestDbError } = await supabase
+      .from("lottery_results")
+      .select("contest_number")
+      .order("contest_number", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (latestDbError) throw latestDbError
+
+    // 2) Consultar o mais recente da Caixa
+    const latestCaixa = await CaixaApiService.getLatestResult()
+
+    // 3) Se não houver dados no banco ou se a Caixa estiver com concurso mais novo, upsert
+    if (latestCaixa && (!latestDb || latestCaixa.contest_number > latestDb.contest_number)) {
+      await admin
+        .from("lottery_results")
+        .upsert(
+          {
+            contest_number: latestCaixa.contest_number,
+            draw_date: latestCaixa.draw_date,
+            numbers: latestCaixa.numbers,
+          },
+          { onConflict: "contest_number" }
+        )
+    }
+
+    // 4) Retornar a lista atualizada
+    const { data, error } = await supabase
       .from("lottery_results")
       .select("*")
       .order("contest_number", { ascending: false })
-      .limit(Number.parseInt(limit))
+      .limit(limit)
 
     if (error) throw error
-
-    // Se não houver resultados ainda, sincroniza o último automaticamente
-    if (!data || data.length === 0) {
-      const sync = await CaixaApiService.syncLatestResult(admin)
-      if (sync.success) {
-        const res = await supabase
-          .from("lottery_results")
-          .select("*")
-          .order("contest_number", { ascending: false })
-          .limit(Number.parseInt(limit))
-        data = res.data ?? []
-      }
-    }
 
     return NextResponse.json({ data })
   } catch (error) {
