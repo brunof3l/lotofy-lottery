@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { CaixaApiService } from "@/lib/services/caixa-api"
 import { type NextRequest, NextResponse } from "next/server"
 
+export const dynamic = "force-dynamic"
+
 export async function GET(request: NextRequest) {
   const supabase = await createClient()
   const admin = createAdminClient()
