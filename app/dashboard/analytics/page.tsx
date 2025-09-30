@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard"
 import { MobileLayout } from "@/components/mobile/mobile-layout"
 
 export default async function AnalyticsPage() {
-  const supabase = await createServerClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.auth.getUser()
   if (error || !data?.user) {

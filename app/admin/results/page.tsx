@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { ResultsManager } from "@/components/admin/results-manager"
 
 export default async function AdminResultsPage() {
-  const supabase = await createServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },

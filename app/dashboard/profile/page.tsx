@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { ProfileForm } from "@/components/profile/profile-form"
 import { ProfileStats } from "@/components/profile/profile-stats"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default async function ProfilePage() {
-  const supabase = await createServerClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.auth.getUser()
   if (error || !data?.user) {

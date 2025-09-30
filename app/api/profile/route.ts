@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 
 export async function PUT(request: Request) {
   try {
-    const supabase = await createServerClient()
+    const supabase = await createClient()
 
     const {
       data: { user },
@@ -45,7 +45,7 @@ export async function PUT(request: Request) {
 
 export async function GET() {
   try {
-    const supabase = await createServerClient()
+    const supabase = await createClient()
 
     const {
       data: { user },

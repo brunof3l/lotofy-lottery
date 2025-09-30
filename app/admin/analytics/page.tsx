@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminAnalytics } from "@/components/admin/admin-analytics"
 
@@ -11,7 +11,7 @@ export const metadata = {
 }
 
 export default async function AdminAnalyticsPage() {
-  const supabase = createServerClient()
+  const supabase = createClient()
 
   const {
     data: { user } = {},
@@ -66,17 +66,6 @@ export default async function AdminAnalyticsPage() {
             results={allResults}
             predictions={allPredictions}
             users={userStats}
-            systemStats={{
-              totalResults: systemStats.length,
-              totalPredictions: allPredictions.length,
-              totalUsers: userStats.length,
-            }}
-          />
-        </div>
-      </main>
-    </div>
-  )
-}
             systemStats={{
               totalResults: systemStats.length,
               totalPredictions: allPredictions.length,
