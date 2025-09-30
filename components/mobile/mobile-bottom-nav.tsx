@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Home, Target, BarChart3, Settings } from "lucide-react"
+import { Home, Target, BarChart3, Calendar, Settings } from "lucide-react"
 
 export function MobileBottomNav() {
   const pathname = usePathname()
@@ -10,6 +10,7 @@ export function MobileBottomNav() {
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Início" },
     { href: "/dashboard/predictions", icon: Target, label: "Previsões" },
+    { href: "/dashboard/results", icon: Calendar, label: "Resultados" },
     { href: "/dashboard/analytics", icon: BarChart3, label: "Análises" },
     { href: "/dashboard/profile", icon: Settings, label: "Perfil" },
   ]
@@ -18,7 +19,7 @@ export function MobileBottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border md:hidden z-40">
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const Icon = item.icon
           return (

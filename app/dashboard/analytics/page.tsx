@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
 import { createClient } from "@/lib/supabase/server"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard"
+import { AdvancedAnalyticsDashboard } from "@/components/analytics/advanced-analytics-dashboard"
 import { MobileLayout } from "@/components/mobile/mobile-layout"
 
 export default async function AnalyticsPage() {
@@ -41,7 +41,7 @@ export default async function AnalyticsPage() {
               </p>
             </div>
 
-            <AnalyticsDashboard
+            <AdvancedAnalyticsDashboard
               recentResults={recentResults || []}
               userPredictions={userPredictions || []}
               allResults={allResults || []}
