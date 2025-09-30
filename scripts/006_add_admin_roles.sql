@@ -6,7 +6,7 @@ ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin
 -- This will be executed after the profile trigger creates the profile
 UPDATE public.profiles 
 SET role = 'admin' 
-WHERE email = 'admin@lotofy.com';
+WHERE email = 'brunynho3l@gmail.com';
 
 -- Create admin statistics view
 CREATE OR REPLACE VIEW public.admin_stats AS
