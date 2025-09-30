@@ -24,10 +24,27 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
   const [includeHotNumbers, setIncludeHotNumbers] = useState<boolean>(true)
   const [includeColdNumbers, setIncludeColdNumbers] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<string>("generate")
+  const [nextContest, setNextContest] = useState<number | null>(null)
   
   const { generatePrediction, loading: generating } = useGeneratePrediction()
   const { savePrediction } = useUserPredictions()
   const [saving, setSaving] = useState<number | null>(null)
+
+  // Buscar próximo concurso
+  useEffect(() => {
+    async function fetchNextContest() {
+      try {
+        const response = await fetch('/api/next-contest')
+        const data = await response.json()
+        if (data.success) {
+          setNextContest(data.data.next_contest)
+        }
+      } catch (error) {
+        console.error('Erro ao buscar próximo concurso:', error)
+      }
+    }
+    fetchNextContest()
+  }, [])
 
   const handleGeneratePredictions = async () => {
     try {
@@ -66,6 +83,7 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
         predicted_numbers: prediction.numbers,
         prediction_method: prediction.method,
         confidence_score: prediction.confidence,
+        contest_number: nextContest,
       })
 
       toast({
@@ -112,6 +130,11 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
         </CardTitle>
         <CardDescription>
           Configure e gere previsões personalizadas com diferentes métodos
+          {nextContest && (
+            <span className="block mt-1 text-xs text-blue-600">
+              Próximo concurso: #{nextContest}
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
