@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { createBrowserClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 import { Loader2, Save } from "lucide-react"
 
 interface ProfileFormProps {
@@ -26,7 +26,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
     state: profile?.state || "",
   })
   const { toast } = useToast()
-  const supabase = createBrowserClient()
+  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

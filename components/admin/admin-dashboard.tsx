@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Users, TrendingUp, Database, Calendar, Plus, Upload } from "lucide-react"
 import { useEffect, useState } from "react"
-import { createBrowserClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 interface AdminStats {
   total_users: number
@@ -18,7 +18,7 @@ interface AdminStats {
 export function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createBrowserClient()
+  const supabase = createClient()
 
   useEffect(() => {
     async function fetchStats() {

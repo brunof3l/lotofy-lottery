@@ -6,6 +6,23 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Target, TrendingUp, Award } from "lucide-react"
 
+interface MatchItem {
+  prediction: { prediction_method?: string; numbers?: number[]; created_at: string }
+  result: { numbers?: number[]; draw_date: string }
+  hits: number
+  date: string
+}
+
+type MethodStats = Record<string, { total: number; hits: number }>
+
+interface AccuracyState {
+  totalPredictions: number
+  matches: MatchItem[]
+  averageHits: number
+  bestPrediction: MatchItem | null
+  methodStats: MethodStats
+}
+
 interface PredictionAccuracyProps {
   userPredictions: any[]
   results: any[]
@@ -13,7 +30,7 @@ interface PredictionAccuracyProps {
 }
 
 export function PredictionAccuracy({ userPredictions, results, userId }: PredictionAccuracyProps) {
-  const accuracy = useMemo(() => {
+  const accuracy = useMemo<AccuracyState>(() => {
     if (userPredictions.length === 0) {
       return {
         totalPredictions: 0,
@@ -24,11 +41,11 @@ export function PredictionAccuracy({ userPredictions, results, userId }: Predict
       }
     }
 
-    const matches: any[] = []
+    const matches: MatchItem[] = []
     let totalHits = 0
     let bestHits = 0
-    let bestPrediction = null
-    const methodStats: { [key: string]: { total: number; hits: number } } = {}
+    let bestPrediction: MatchItem | null = null
+    const methodStats: MethodStats = {}
 
     userPredictions.forEach((prediction) => {
       // Find corresponding result
@@ -50,7 +67,7 @@ export function PredictionAccuracy({ userPredictions, results, userId }: Predict
 
         if (hits > bestHits) {
           bestHits = hits
-          bestPrediction = { prediction, result, hits }
+          bestPrediction = { prediction, result, hits, date: prediction.created_at }
         }
 
         // Method statistics

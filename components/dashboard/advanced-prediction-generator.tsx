@@ -46,14 +46,23 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
     fetchNextContest()
   }, [])
 
+  type GeneratedPrediction = {
+    id: number
+    method: string
+    timestamp: string
+    numbers: number[]
+    confidence: number
+  }
+
   const handleGeneratePredictions = async () => {
     try {
-      const newPredictions = []
+      const newPredictions: GeneratedPrediction[] = []
       
       for (let i = 0; i < quantity; i++) {
-        const result = await generatePrediction(method)
+        const result = await generatePrediction(method) as { numbers: number[]; method: string; confidence: number }
         newPredictions.push({
-          ...result,
+          numbers: result.numbers,
+          confidence: result.confidence,
           id: Date.now() + i,
           method: method,
           timestamp: new Date().toISOString()
@@ -76,14 +85,14 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
     }
   }
 
-  const handleSavePrediction = async (prediction: any) => {
+  const handleSavePrediction = async (prediction: GeneratedPrediction) => {
     setSaving(prediction.id)
     try {
       await savePrediction({
         predicted_numbers: prediction.numbers,
         prediction_method: prediction.method,
         confidence_score: prediction.confidence,
-        contest_number: nextContest,
+        contest_number: nextContest ?? undefined,
       })
 
       toast({

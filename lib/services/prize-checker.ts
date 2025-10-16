@@ -1,4 +1,5 @@
 // lib/services/prize-checker.ts
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 export interface PrizeCheckResult {
   prediction_id: string
@@ -18,6 +19,19 @@ export interface PrizeLevel {
   description: string
   matches_required: number
   typical_prize: number
+}
+
+export interface UserPrediction {
+  id: string
+  user_id: string
+  contest_number: number
+  predicted_numbers: number[]
+  created_at: string
+}
+
+export interface LotteryResult {
+  contest_number: number
+  numbers: number[]
 }
 
 const LOTOFACIL_PRIZE_LEVELS: PrizeLevel[] = [
@@ -78,7 +92,7 @@ export class PrizeCheckerService {
   static async checkUserPredictionsForContest(
     userId: string, 
     contestNumber: number, 
-    supabase: any
+    supabase: SupabaseClient
   ): Promise<PrizeCheckResult[]> {
     try {
       // Buscar previsões do usuário para o concurso
@@ -107,11 +121,11 @@ export class PrizeCheckerService {
         throw new Error(`Resultado do concurso ${contestNumber} não encontrado`)
       }
 
-      const drawnNumbers = result.numbers
+      const drawnNumbers = (result as LotteryResult).numbers
       const prizeResults: PrizeCheckResult[] = []
 
       // Verificar cada previsão
-      for (const prediction of predictions) {
+      for (const prediction of predictions as UserPrediction[]) {
         const { matches, misses, matchCount } = this.checkMatches(
           prediction.predicted_numbers,
           drawnNumbers
@@ -147,7 +161,7 @@ export class PrizeCheckerService {
    */
   static async checkAllUserPredictions(
     userId: string, 
-    supabase: any
+    supabase: SupabaseClient
   ): Promise<{
     totalPredictions: number
     totalWinners: number
@@ -177,13 +191,13 @@ export class PrizeCheckerService {
       }
 
       // Agrupar por concurso
-      const predictionsByContest = predictions.reduce((acc, prediction) => {
+      const predictionsByContest = (predictions as UserPrediction[]).reduce((acc, prediction) => {
         if (!acc[prediction.contest_number]) {
           acc[prediction.contest_number] = []
         }
         acc[prediction.contest_number].push(prediction)
         return acc
-      }, {} as Record<number, any[]>)
+      }, {} as Record<number, UserPrediction[]>)
 
       let totalWinners = 0
       const prizeBreakdown: Record<string, number> = {}
@@ -197,9 +211,9 @@ export class PrizeCheckerService {
             parseInt(contestNumber), 
             supabase
           )
-          
+
           allResults.push(...contestResults)
-          
+
           // Contar ganhadores
           contestResults.forEach(result => {
             if (result.is_winner) {

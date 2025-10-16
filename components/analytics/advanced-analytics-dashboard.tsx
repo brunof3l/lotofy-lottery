@@ -41,6 +41,12 @@ export function AdvancedAnalyticsDashboard({
   const [activeTab, setActiveTab] = useState<string>("overview")
   const [refreshing, setRefreshing] = useState(false)
 
+  const methodDistribution: Record<string, number> = userPredictions.reduce((acc: Record<string, number>, p: any) => {
+    const key = String(p?.prediction_method ?? 'unknown')
+    acc[key] = (acc[key] || 0) + 1
+    return acc
+  }, {})
+
   const handleRefresh = async () => {
     setRefreshing(true)
     // Simular refresh - em produção, isso recarregaria os dados
@@ -212,12 +218,7 @@ export function AdvancedAnalyticsDashboard({
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {Object.entries(
-                    userPredictions.reduce((acc, p) => {
-                      acc[p.prediction_method] = (acc[p.prediction_method] || 0) + 1
-                      return acc
-                    }, {} as Record<string, number>)
-                  ).map(([method, count]) => (
+                  {Object.entries(methodDistribution).map(([method, count]) => (
                     <div key={method} className="flex items-center justify-between">
                       <span className="text-sm capitalize">{method.replace('_', ' ')}</span>
                       <div className="flex items-center space-x-2">

@@ -74,8 +74,8 @@ function generateStatisticalPrediction(stats: any[]): number[] {
 
   weighted.sort((a, b) => b.weight - a.weight)
 
-  const prediction = []
-  const used = new Set()
+  const prediction: number[] = []
+  const used = new Set<number>()
 
   // Take top weighted numbers with some randomization
   for (let i = 0; i < weighted.length && prediction.length < 15; i++) {
@@ -104,8 +104,8 @@ function generateAIPrediction(stats: any[]): number[] {
   const neutralNumbers = stats.filter((s) => s.hot_cold_status === "neutral").map((s) => s.number_value)
   const coldNumbers = stats.filter((s) => s.hot_cold_status === "cold").map((s) => s.number_value)
 
-  const prediction = []
-  const used = new Set()
+  const prediction: number[] = []
+  const used = new Set<number>()
 
   // 60% hot, 30% neutral, 10% cold
   const hotCount = Math.floor(15 * 0.6)
@@ -157,8 +157,8 @@ function generateHotNumbersPrediction(stats: any[]): number[] {
     .sort((a, b) => b.frequency - a.frequency)
     .map((s) => s.number_value)
 
-  const prediction = []
-  const used = new Set()
+  const prediction: number[] = []
+  const used = new Set<number>()
 
   // Use mostly hot numbers
   for (let i = 0; i < Math.min(12, hotNumbers.length); i++) {
@@ -179,8 +179,8 @@ function generateHotNumbersPrediction(stats: any[]): number[] {
 }
 
 function generateBalancedPrediction(stats: any[]): number[] {
-  const prediction = []
-  const used = new Set()
+  const prediction: number[] = []
+  const used = new Set<number>()
 
   // Balanced selection across all ranges
   const ranges = [
@@ -209,8 +209,8 @@ function generateBalancedPrediction(stats: any[]): number[] {
 }
 
 function generateRandomPrediction(): number[] {
-  const prediction = []
-  const used = new Set()
+  const prediction: number[] = []
+  const used = new Set<number>()
 
   while (prediction.length < 15) {
     const num = Math.floor(Math.random() * 25) + 1

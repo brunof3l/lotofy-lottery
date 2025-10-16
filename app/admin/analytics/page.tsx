@@ -45,6 +45,11 @@ export default async function AdminAnalyticsPage() {
     supabase.from("lottery_results").select("id"),
   ])
 
+  const allResultsArray = allResults ?? []
+  const allPredictionsArray = allPredictions ?? []
+  const userStatsArray = userStats ?? []
+  const systemStatsArray = systemStats ?? []
+
   if (resultsError || predictionsError || usersError || systemError) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -63,13 +68,13 @@ export default async function AdminAnalyticsPage() {
             <p className="text-muted-foreground">Visão completa do sistema e performance dos usuários</p>
           </div>
           <AdminAnalytics
-            results={allResults}
-            predictions={allPredictions}
-            users={userStats}
+            results={allResultsArray}
+            predictions={allPredictionsArray}
+            users={userStatsArray}
             systemStats={{
-              totalResults: systemStats.length,
-              totalPredictions: allPredictions.length,
-              totalUsers: userStats.length,
+              totalResults: systemStatsArray.length,
+              totalPredictions: allPredictionsArray.length,
+              totalUsers: userStatsArray.length,
             }}
           />
         </div>

@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import Image from "next/image"
-import { BarChart3, TrendingUp, Users, Brain, Shield, Star, Play, ArrowRight, Menu } from "lucide-react"
+import { BarChart3, TrendingUp, Users, Brain, Shield, Star, Play, ArrowRight, Menu, Target } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+
+export const dynamic = "force-dynamic"
 
 export default function HomePage() {
   return (
