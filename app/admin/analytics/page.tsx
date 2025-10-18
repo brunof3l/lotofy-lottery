@@ -13,14 +13,11 @@ export const metadata = {
 export default async function AdminAnalyticsPage() {
   const supabase = createClient()
 
-  const {
-    data: { user } = {},
-    error: userError,
-  } = await supabase.auth.getUser()
-
-  if (userError || !user) {
-    redirect("/auth/login")
+  const { data, error: userError } = await supabase.auth.getUser();
+  if (userError || !data?.user) {
+    redirect("/auth/login");
   }
+  const { user } = data;
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
@@ -57,6 +54,8 @@ export default async function AdminAnalyticsPage() {
       </div>
     )
   }
+
+  // Dados seguros normalizados
 
   return (
     <div className="min-h-screen bg-background">

@@ -9,18 +9,19 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  // Evita falhas quando variáveis de ambiente não estão configuradas
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // Se variáveis de ambiente não estiverem presentes, não executar lógica de sessão
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!url || !anon) {
+    // Sem Supabase configurado: segue o fluxo sem autenticação
     return response
   }
 
-  // cria o client do supabase
+  // cria o client do supabase quando envs existem
   const supabase = createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
+    url,
+    anon,
     {
       cookies: {
         get(name: string) {

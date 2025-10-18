@@ -3,7 +3,7 @@
 ## 📋 Resumo dos Problemas Encontrados
 
 ### ✅ Problemas Corrigidos:
-1. **Erro na função `createServerSupabaseClient()`** - Corrigido para `createClient()`
+1. **Uso de `createServerSupabaseClient` obsoleto** - Atualizado para o novo `createClient` do pacote `@supabase/ssr` para maior consistência e segurança
 2. **Linting** - Nenhum erro encontrado
 3. **Configurações** - Todos os arquivos de configuração estão corretos
 
