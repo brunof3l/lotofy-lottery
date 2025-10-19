@@ -39,8 +39,8 @@ export default async function DashboardPage() {
 
               {/* Right Column */}
               <div className="space-y-6 sm:space-y-8">
-                <PredictionGenerator userId={data.user.id} />
-                <UserPredictions userId={data.user.id} />
+                <PredictionGenerator />
+                <UserPredictions />
               </div>
             </div>
           </div>

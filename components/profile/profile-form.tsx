@@ -10,10 +10,18 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { createClient } from "@/lib/supabase/client"
 import { Loader2, Save } from "lucide-react"
+import type { User, UserProfile } from "@/lib/types"
+
+interface EditableProfile extends Partial<UserProfile> {
+  bio?: string
+  phone?: string
+  city?: string
+  state?: string
+}
 
 interface ProfileFormProps {
-  user: any
-  profile: any
+  user: User
+  profile: EditableProfile
 }
 
 export function ProfileForm({ user, profile }: ProfileFormProps) {
@@ -28,7 +36,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
   const { toast } = useToast()
   const supabase = createClient()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
 
@@ -63,7 +71,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
     }
   }
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -82,7 +90,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" value={user.email} disabled className="bg-muted" />
+          <Input id="email" value={user.email || ""} disabled className="bg-muted" />
           <p className="text-xs text-muted-foreground">O email não pode ser alterado</p>
         </div>
       </div>

@@ -4,11 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard"
 import { Users, Database, Target, TrendingUp } from "lucide-react"
+import type { LotteryResult, UserPrediction, UserProfile } from "@/lib/types"
+
 
 interface AdminAnalyticsProps {
-  results: any[]
-  predictions: any[]
-  users: any[]
+  results: LotteryResult[]
+  predictions: UserPrediction[]
+  users: UserProfile[]
   systemStats: {
     totalResults: number
     totalPredictions: number
@@ -53,31 +55,86 @@ export function AdminAnalytics({ results, predictions, users, systemStats }: Adm
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Média por Usuário</CardTitle>
+            <CardTitle className="text-sm font-medium">Tendência Geral</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {systemStats.totalUsers > 0 ? Math.round(systemStats.totalPredictions / systemStats.totalUsers) : 0}
-            </div>
+            <div className="text-sm text-muted-foreground">Estável</div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Analytics Dashboard */}
-      <Tabs defaultValue="system" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="system">Analytics do Sistema</TabsTrigger>
-          <TabsTrigger value="users">Analytics de Usuários</TabsTrigger>
+      {/* Analytics Tabs */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto">
+          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="results">Resultados</TabsTrigger>
+          <TabsTrigger value="predictions">Previsões</TabsTrigger>
+          <TabsTrigger value="users">Usuários</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="system">
-          <AnalyticsDashboard
-            recentResults={results.slice(0, 100)}
-            userPredictions={predictions}
-            allResults={results}
-            userId="admin"
-          />
+        <TabsContent value="overview">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analytics do Sistema</CardTitle>
+              <CardDescription>Visão geral das métricas do sistema</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AnalyticsDashboard
+                recentResults={results.slice(0, 100)}
+                userPredictions={predictions}
+                allResults={results}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="results">
+          <Card>
+            <CardHeader>
+              <CardTitle>Resultados Recentes</CardTitle>
+              <CardDescription>Listagem dos últimos resultados cadastrados</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {results.slice(0, 20).map((r) => (
+                  <div key={r.contest_number} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">Concurso {r.contest_number}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {r.draw_date ? new Date(r.draw_date).toLocaleDateString("pt-BR") : "-"}
+                      </p>
+                    </div>
+                    <div className="text-sm">{r.numbers?.join(", ")}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="predictions">
+          <Card>
+            <CardHeader>
+              <CardTitle>Previsões Recentes</CardTitle>
+              <CardDescription>Listagem das previsões dos usuários</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {predictions.slice(0, 20).map((p) => (
+                  <div key={p.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">Usuário {p.user_id}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Método {p.prediction_method || "-"}
+                      </p>
+                    </div>
+                    <div className="text-sm">{p.predicted_numbers?.join(", ")}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="users">
@@ -95,7 +152,7 @@ export function AdminAnalytics({ results, predictions, users, systemStats }: Adm
                       <div>
                         <p className="font-medium">{user.full_name || "Usuário sem nome"}</p>
                         <p className="text-sm text-muted-foreground">
-                          Membro desde {new Date(user.created_at).toLocaleDateString("pt-BR")}
+                          Membro desde {user.created_at ? new Date(user.created_at).toLocaleDateString("pt-BR") : "-"}
                         </p>
                       </div>
                       <div className="text-right">

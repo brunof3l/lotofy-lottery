@@ -9,39 +9,35 @@ import { PatternAnalysis } from "./pattern-analysis"
 import { TrendAnalysis } from "./trend-analysis"
 import { PredictionAccuracy } from "./prediction-accuracy"
 import { HotColdNumbers } from "./hot-cold-numbers"
-import { DistributionAnalysis } from "./distribution-analysis"
 import { 
   BarChart3, 
   TrendingUp, 
   Target, 
-  Zap, 
   Thermometer, 
   PieChart,
   Download,
   RefreshCw,
   Calendar,
-  Users,
   Trophy
 } from "lucide-react"
 import { useState } from "react"
+import type { LotteryResult, UserPrediction } from "@/lib/types"
 
 interface AdvancedAnalyticsDashboardProps {
-  recentResults: any[]
-  userPredictions: any[]
-  allResults: any[]
-  userId: string
+  recentResults: LotteryResult[]
+  userPredictions: UserPrediction[]
+  allResults: LotteryResult[]
 }
 
 export function AdvancedAnalyticsDashboard({ 
   recentResults, 
   userPredictions, 
-  allResults, 
-  userId 
+  allResults
 }: AdvancedAnalyticsDashboardProps) {
   const [activeTab, setActiveTab] = useState<string>("overview")
   const [refreshing, setRefreshing] = useState(false)
 
-  const methodDistribution: Record<string, number> = userPredictions.reduce((acc: Record<string, number>, p: any) => {
+  const methodDistribution: Record<string, number> = userPredictions.reduce((acc: Record<string, number>, p: UserPrediction) => {
     const key = String(p?.prediction_method ?? 'unknown')
     acc[key] = (acc[key] || 0) + 1
     return acc
@@ -200,12 +196,6 @@ export function AdvancedAnalyticsDashboard({
                       <span>Confiança média:</span>
                       <span className="font-medium">{stats.avgConfidence}%</span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div 
-                        className="bg-primary h-2 rounded-full transition-all duration-300" 
-                        style={{ width: `${stats.avgConfidence}%` }}
-                      />
-                    </div>
                   </div>
                 )}
               </CardContent>
@@ -213,23 +203,17 @@ export function AdvancedAnalyticsDashboard({
 
             <Card>
               <CardHeader>
-                <CardTitle>Métodos Mais Usados</CardTitle>
-                <CardDescription>Distribuição dos métodos de previsão</CardDescription>
+                <CardTitle>Distribuição de Métodos</CardTitle>
+                <CardDescription>Quais métodos você usa mais nas previsões</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {Object.entries(methodDistribution).map(([method, count]) => (
                     <div key={method} className="flex items-center justify-between">
-                      <span className="text-sm capitalize">{method.replace('_', ' ')}</span>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-20 bg-muted rounded-full h-2">
-                          <div 
-                            className="bg-primary h-2 rounded-full" 
-                            style={{ width: `${(count / userPredictions.length) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium w-8 text-right">{count}</span>
-                      </div>
+                      <span className="text-sm">
+                        {method === 'statistical' ? 'Estatístico' : method === 'manual' ? 'Manual' : method === 'random' ? 'Aleatório' : method}
+                      </span>
+                      <span className="font-medium">{count}</span>
                     </div>
                   ))}
                 </div>
@@ -239,17 +223,7 @@ export function AdvancedAnalyticsDashboard({
         </TabsContent>
 
         <TabsContent value="frequency" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg sm:text-xl">Frequência dos Números</CardTitle>
-              <CardDescription className="text-sm">
-                Análise da frequência de cada número nos últimos sorteios
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <NumberFrequencyChart results={allResults} />
-            </CardContent>
-          </Card>
+          <NumberFrequencyChart results={allResults} />
         </TabsContent>
 
         <TabsContent value="patterns" className="space-y-4">
@@ -261,7 +235,7 @@ export function AdvancedAnalyticsDashboard({
         </TabsContent>
 
         <TabsContent value="accuracy" className="space-y-4">
-          <PredictionAccuracy userPredictions={userPredictions} results={recentResults} userId={userId} />
+          <PredictionAccuracy userPredictions={userPredictions} results={recentResults} />
         </TabsContent>
 
         <TabsContent value="hotcold" className="space-y-4">

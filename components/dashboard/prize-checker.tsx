@@ -12,10 +12,7 @@ import {
   CheckCircle, 
   XCircle, 
   Target, 
-  TrendingUp,
-  Calendar,
-  Download,
-  Sparkles
+  Download
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 
@@ -44,11 +41,8 @@ interface PrizeStatistics {
   prizeDistribution: Record<string, number>
 }
 
-interface PrizeCheckerProps {
-  userId: string
-}
 
-export function PrizeChecker({ userId }: PrizeCheckerProps) {
+export function PrizeChecker() {
   const [prizeResults, setPrizeResults] = useState<PrizeResult[]>([])
   const [statistics, setStatistics] = useState<PrizeStatistics | null>(null)
   const [loading, setLoading] = useState(false)
@@ -84,7 +78,7 @@ export function PrizeChecker({ userId }: PrizeCheckerProps) {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro",
         description: "Erro ao verificar prêmios",
@@ -121,7 +115,7 @@ export function PrizeChecker({ userId }: PrizeCheckerProps) {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro",
         description: "Erro ao sincronizar resultado",

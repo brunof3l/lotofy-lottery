@@ -13,12 +13,16 @@ import { Sparkles, RefreshCw, Target, TrendingUp, Brain, Zap } from "lucide-reac
 import { useGeneratePrediction, useUserPredictions } from "@/lib/hooks/use-lottery-data"
 import { toast } from "@/hooks/use-toast"
 
-interface AdvancedPredictionGeneratorProps {
-  userId: string
-}
+export function AdvancedPredictionGenerator() {
+  type GeneratedPrediction = {
+    id: number
+    method: string
+    timestamp: string
+    numbers: number[]
+    confidence: number
+  }
 
-export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGeneratorProps) {
-  const [predictions, setPredictions] = useState<any[]>([])
+  const [predictions, setPredictions] = useState<GeneratedPrediction[]>([])
   const [method, setMethod] = useState<string>("statistical")
   const [quantity, setQuantity] = useState<number>(1)
   const [includeHotNumbers, setIncludeHotNumbers] = useState<boolean>(true)
@@ -39,20 +43,12 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
         if (data.success) {
           setNextContest(data.data.next_contest)
         }
-      } catch (error) {
-        console.error('Erro ao buscar próximo concurso:', error)
+      } catch {
+        console.error('Erro ao buscar próximo concurso')
       }
     }
     fetchNextContest()
   }, [])
-
-  type GeneratedPrediction = {
-    id: number
-    method: string
-    timestamp: string
-    numbers: number[]
-    confidence: number
-  }
 
   const handleGeneratePredictions = async () => {
     try {
@@ -76,7 +72,7 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
         title: "Sucesso",
         description: `${quantity} previsão(ões) gerada(s) com sucesso!`,
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro",
         description: "Falha ao gerar previsões. Tente novamente.",
@@ -99,7 +95,7 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
         title: "Sucesso",
         description: "Previsão salva com sucesso!",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro",
         description: "Falha ao salvar previsão. Tente novamente.",
@@ -260,7 +256,7 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
               <div className="text-center py-8">
                 <Sparkles className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">
-                  Nenhuma previsão gerada ainda. Vá para a aba "Gerar" para criar suas previsões.
+                  Nenhuma previsão gerada ainda. Vá para a aba &ldquo;Gerar&rdquo; para criar suas previsões.
                 </p>
               </div>
             ) : (
@@ -281,7 +277,7 @@ export function AdvancedPredictionGenerator({ userId }: AdvancedPredictionGenera
                     </div>
 
                     <div className="grid grid-cols-5 gap-2">
-                      {prediction.numbers.map((number: number) => (
+                      {prediction.numbers.map((number) => (
                         <div
                           key={number}
                           className="aspect-square rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold"

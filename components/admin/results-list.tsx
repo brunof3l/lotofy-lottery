@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, Hash } from "lucide-react"
+import type { LotteryResult } from "@/lib/types"
 
 interface ResultsListProps {
-  results: any[]
+  results: LotteryResult[]
 }
 
 export function ResultsList({ results }: ResultsListProps) {

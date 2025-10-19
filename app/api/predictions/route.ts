@@ -1,32 +1,32 @@
 import { createClient } from "@/lib/supabase/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(request: NextRequest) {
-  const supabase = await createClient()
+export async function GET() {
+   const supabase = await createClient()
 
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+   try {
+     const {
+       data: { user },
+     } = await supabase.auth.getUser()
+     if (!user) {
+       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+     }
 
-    const { data, error } = await supabase
-      .from("user_predictions")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(10)
+     const { data, error } = await supabase
+       .from("user_predictions")
+       .select("*")
+       .eq("user_id", user.id)
+       .order("created_at", { ascending: false })
+       .limit(10)
 
-    if (error) throw error
+     if (error) throw error
 
-    return NextResponse.json({ data })
-  } catch (error) {
-    console.error("Error fetching predictions:", error)
-    return NextResponse.json({ error: "Failed to fetch predictions" }, { status: 500 })
-  }
-}
+     return NextResponse.json({ data })
+   } catch (error) {
+     console.error("Error fetching predictions:", error)
+     return NextResponse.json({ error: "Failed to fetch predictions" }, { status: 500 })
+   }
+ }
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()

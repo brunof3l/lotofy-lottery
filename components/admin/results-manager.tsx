@@ -7,19 +7,20 @@ import { ImportCSV } from "./import-csv"
 import { ManualEntry } from "./manual-entry"
 import { ResultsList } from "./results-list"
 import { Upload, Plus, List } from "lucide-react"
+import type { LotteryResult } from "@/lib/types"
 
 interface ResultsManagerProps {
-  initialResults: any[]
+  initialResults: LotteryResult[]
 }
 
 export function ResultsManager({ initialResults }: ResultsManagerProps) {
-  const [results, setResults] = useState(initialResults)
+  const [results, setResults] = useState<LotteryResult[]>(initialResults)
 
-  const handleResultAdded = (newResult: any) => {
+  const handleResultAdded = (newResult: LotteryResult) => {
     setResults((prev) => [newResult, ...prev])
   }
 
-  const handleResultsImported = (importedResults: any[]) => {
+  const handleResultsImported = (importedResults: LotteryResult[]) => {
     setResults((prev) => [...importedResults, ...prev])
   }
 

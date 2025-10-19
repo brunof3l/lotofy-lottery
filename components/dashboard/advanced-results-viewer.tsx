@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, Search, Filter, Download, Eye } from "lucide-react"
+import { Calendar, Search, Download, Eye } from "lucide-react"
 import { useLotteryResults } from "@/lib/hooks/use-lottery-data"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -190,7 +190,7 @@ export function AdvancedResultsViewer({ limit = 50 }: AdvancedResultsViewerProps
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {stats.mostFrequent.map((item, index) => (
+                    {stats.mostFrequent.map((item) => (
                       <div key={item.number} className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <Badge variant="secondary">#{item.number}</Badge>
@@ -215,7 +215,7 @@ export function AdvancedResultsViewer({ limit = 50 }: AdvancedResultsViewerProps
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {stats.leastFrequent.map((item, index) => (
+                    {stats.leastFrequent.map((item) => (
                       <div key={item.number} className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <Badge variant="secondary">#{item.number}</Badge>
@@ -274,7 +274,7 @@ export function AdvancedResultsViewer({ limit = 50 }: AdvancedResultsViewerProps
               {searchTerm && (
                 <div className="space-y-4">
                   <div className="text-sm text-muted-foreground">
-                    {filteredResults.length} resultado(s) encontrado(s) para "{searchTerm}"
+                    {filteredResults.length} resultado(s) encontrado(s) para &ldquo;{searchTerm}&rdquo;
                   </div>
                   
                   <div className="space-y-3 max-h-64 overflow-y-auto">

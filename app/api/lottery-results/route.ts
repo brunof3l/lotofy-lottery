@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { CaixaApiService } from "@/lib/services/caixa-api"
 import { type NextRequest, NextResponse } from "next/server"
+import type { LotteryResult } from "@/lib/types"
 
 export const dynamic = "force-dynamic"
 
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     // Se o upsert falhou por permissão mas temos latest da Caixa, injeta no topo para exibição.
-    let finalData = data || []
+    let finalData: LotteryResult[] = (data ?? []) as LotteryResult[]
     if (upsertFailed && latestCaixa) {
       const exists = finalData.some(r => r.contest_number === latestCaixa.contest_number)
       if (!exists) {

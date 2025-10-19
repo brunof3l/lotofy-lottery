@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Plus, X, Save } from "lucide-react"
+import type { LotteryResult } from "@/lib/types"
 
 interface ManualEntryProps {
-  onResultAdded: (result: any) => void
+  onResultAdded: (result: LotteryResult) => void
 }
 
 export function ManualEntry({ onResultAdded }: ManualEntryProps) {
@@ -62,7 +63,7 @@ export function ManualEntry({ onResultAdded }: ManualEntryProps) {
       }
 
       const data = await response.json()
-      onResultAdded(data.data[0])
+      onResultAdded(data.data[0] as LotteryResult)
 
       // Reset form
       setContestNumber("")

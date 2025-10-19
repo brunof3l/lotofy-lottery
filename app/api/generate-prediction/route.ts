@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { type NextRequest, NextResponse } from "next/server"
+import type { NumberStatistic } from "@/lib/types"
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -23,28 +24,30 @@ export async function POST(request: NextRequest) {
 
     if (statsError) throw statsError
 
+    const statsTyped: NumberStatistic[] = (stats ?? []) as NumberStatistic[]
+
     let prediction: number[] = []
     let confidence = 0.75
 
     switch (method) {
       case "statistical":
         // Use frequency-based selection
-        prediction = generateStatisticalPrediction(stats)
+        prediction = generateStatisticalPrediction(statsTyped)
         confidence = 0.85
         break
       case "ai":
         // Simulate AI prediction (in real app, this would call ML model)
-        prediction = generateAIPrediction(stats)
+        prediction = generateAIPrediction(statsTyped)
         confidence = 0.78
         break
       case "hot":
         // Focus on hot numbers
-        prediction = generateHotNumbersPrediction(stats)
+        prediction = generateHotNumbersPrediction(statsTyped)
         confidence = 0.72
         break
       case "balanced":
         // Balanced approach
-        prediction = generateBalancedPrediction(stats)
+        prediction = generateBalancedPrediction()
         confidence = 0.8
         break
       default:
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function generateStatisticalPrediction(stats: any[]): number[] {
+function generateStatisticalPrediction(stats: NumberStatistic[]): number[] {
   // Select numbers based on frequency and recency
   const weighted = stats.map((stat) => ({
     number: stat.number_value,
@@ -98,7 +101,7 @@ function generateStatisticalPrediction(stats: any[]): number[] {
   return prediction
 }
 
-function generateAIPrediction(stats: any[]): number[] {
+function generateAIPrediction(stats: NumberStatistic[]): number[] {
   // Simulate AI prediction with pattern recognition
   const hotNumbers = stats.filter((s) => s.hot_cold_status === "hot").map((s) => s.number_value)
   const neutralNumbers = stats.filter((s) => s.hot_cold_status === "neutral").map((s) => s.number_value)
@@ -151,7 +154,7 @@ function generateAIPrediction(stats: any[]): number[] {
   return prediction
 }
 
-function generateHotNumbersPrediction(stats: any[]): number[] {
+function generateHotNumbersPrediction(stats: NumberStatistic[]): number[] {
   const hotNumbers = stats
     .filter((s) => s.hot_cold_status === "hot")
     .sort((a, b) => b.frequency - a.frequency)
@@ -178,7 +181,7 @@ function generateHotNumbersPrediction(stats: any[]): number[] {
   return prediction
 }
 
-function generateBalancedPrediction(stats: any[]): number[] {
+function generateBalancedPrediction(): number[] {
   const prediction: number[] = []
   const used = new Set<number>()
 

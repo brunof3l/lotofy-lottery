@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Target, TrendingUp, Award } from "lucide-react"
+import type { LotteryResult, UserPrediction } from "@/lib/types"
 
 interface MatchItem {
-  prediction: { prediction_method?: string; numbers?: number[]; created_at: string }
-  result: { numbers?: number[]; draw_date: string }
+  prediction: UserPrediction
+  result: LotteryResult
   hits: number
   date: string
 }
@@ -24,12 +25,11 @@ interface AccuracyState {
 }
 
 interface PredictionAccuracyProps {
-  userPredictions: any[]
-  results: any[]
-  userId: string
+  userPredictions: UserPrediction[]
+  results: LotteryResult[]
 }
 
-export function PredictionAccuracy({ userPredictions, results, userId }: PredictionAccuracyProps) {
+export function PredictionAccuracy({ userPredictions, results }: PredictionAccuracyProps) {
   const accuracy = useMemo<AccuracyState>(() => {
     if (userPredictions.length === 0) {
       return {
@@ -53,8 +53,8 @@ export function PredictionAccuracy({ userPredictions, results, userId }: Predict
         (r) => new Date(r.draw_date).toDateString() === new Date(prediction.created_at).toDateString(),
       )
 
-      if (result && result.numbers && prediction.numbers) {
-        const hits = prediction.numbers.filter((num: number) => result.numbers.includes(num)).length
+      if (result && result.numbers && prediction.predicted_numbers) {
+        const hits = prediction.predicted_numbers.filter((num: number) => result.numbers.includes(num)).length
 
         matches.push({
           prediction,

@@ -26,7 +26,7 @@ export function createClient() {
           async delete() { return { data: null, error: new Error("Supabase não configurado.") } },
         }
       },
-    } as any
+    } as ReturnType<typeof createBrowserClient>
   }
 
   return createBrowserClient(url, anonKey)

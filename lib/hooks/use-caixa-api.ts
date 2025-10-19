@@ -1,16 +1,23 @@
 "use client"
 
 import { useState } from "react"
-import { CaixaApiService, ProcessedLotofacilResult } from "@/lib/services/caixa-api"
+import type { ProcessedLotofacilResult } from "@/lib/services/caixa-api"
+import type { NextContestInfo } from "@/lib/types"
 
 export function useCaixaApi() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const syncLatestResult = async () => {
+  type SyncLatestResultResponse = {
+    success: boolean
+    message: string
+    data?: ProcessedLotofacilResult
+  }
+
+  const syncLatestResult = async (): Promise<SyncLatestResultResponse> => {
     setLoading(true)
     setError(null)
-    
+
     try {
       const response = await fetch('/api/sync-latest-result', {
         method: 'POST'
@@ -21,7 +28,7 @@ export function useCaixaApi() {
         throw new Error(data.message || 'Falha na sincronização')
       }
 
-      return data
+      return data as SyncLatestResultResponse
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao sincronizar'
       setError(errorMessage)
@@ -31,10 +38,10 @@ export function useCaixaApi() {
     }
   }
 
-  const getLatestResult = async () => {
+  const getLatestResult = async (): Promise<ProcessedLotofacilResult> => {
     setLoading(true)
     setError(null)
-    
+
     try {
       const response = await fetch('/api/sync-latest-result')
       const data = await response.json()
@@ -43,7 +50,7 @@ export function useCaixaApi() {
         throw new Error(data.message || 'Falha ao buscar resultado')
       }
 
-      return data.data
+      return data.data as ProcessedLotofacilResult
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar resultado'
       setError(errorMessage)
@@ -53,10 +60,10 @@ export function useCaixaApi() {
     }
   }
 
-  const getNextContest = async () => {
+  const getNextContest = async (): Promise<NextContestInfo> => {
     setLoading(true)
     setError(null)
-    
+
     try {
       const response = await fetch('/api/next-contest')
       const data = await response.json()
@@ -65,7 +72,7 @@ export function useCaixaApi() {
         throw new Error(data.message || 'Falha ao buscar próximo concurso')
       }
 
-      return data.data
+      return data.data as NextContestInfo
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar próximo concurso'
       setError(errorMessage)

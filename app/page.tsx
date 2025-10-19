@@ -289,8 +289,8 @@ export default function HomePage() {
                     ))}
                   </div>
                   <CardDescription className="text-sm sm:text-base leading-relaxed">
-                    "Desde que comecei a usar o Lotofy, minha taxa de acerto aumentou significativamente. As análises
-                    são muito precisas!"
+                    &ldquo;Desde que comecei a usar o Lotofy, minha taxa de acerto aumentou significativamente. As análises
+                    são muito precisas!&rdquo;
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -314,7 +314,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <CardDescription className="text-sm sm:text-base leading-relaxed">
-                    "A interface é muito intuitiva e as previsões são baseadas em dados reais. Recomendo para todos!"
+                    &ldquo;A interface é muito intuitiva e as previsões são baseadas em dados reais. Recomendo para todos!&rdquo;
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -338,8 +338,8 @@ export default function HomePage() {
                     ))}
                   </div>
                   <CardDescription className="text-sm sm:text-base leading-relaxed">
-                    "Finalmente encontrei uma ferramenta que realmente funciona. Os padrões identificados são
-                    impressionantes!"
+                    &ldquo;Finalmente encontrei uma ferramenta que realmente funciona. Os padrões identificados são
+                    impressionantes!&rdquo;
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

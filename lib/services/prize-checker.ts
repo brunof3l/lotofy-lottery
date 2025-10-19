@@ -204,7 +204,7 @@ export class PrizeCheckerService {
       const allResults: PrizeCheckResult[] = []
 
       // Verificar cada concurso
-      for (const [contestNumber, contestPredictions] of Object.entries(predictionsByContest)) {
+      for (const contestNumber of Object.keys(predictionsByContest)) {
         try {
           const contestResults = await this.checkUserPredictionsForContest(
             userId, 

@@ -3,9 +3,10 @@
 import { useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import type { LotteryResult } from "@/lib/types"
 
 interface DistributionAnalysisProps {
-  results: any[]
+  results: LotteryResult[]
 }
 
 export function DistributionAnalysis({ results }: DistributionAnalysisProps) {

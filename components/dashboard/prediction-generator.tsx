@@ -9,11 +9,7 @@ import { Sparkles, RefreshCw } from "lucide-react"
 import { useGeneratePrediction, useUserPredictions } from "@/lib/hooks/use-lottery-data"
 import { toast } from "@/hooks/use-toast"
 
-interface PredictionGeneratorProps {
-  userId: string
-}
-
-export function PredictionGenerator({ userId }: PredictionGeneratorProps) {
+export function PredictionGenerator() {
   const [prediction, setPrediction] = useState<{ numbers: number[]; confidence: number; method: string } | null>(null)
   const [method, setMethod] = useState<string>("statistical")
   const { generatePrediction, loading: generating } = useGeneratePrediction()
@@ -24,7 +20,7 @@ export function PredictionGenerator({ userId }: PredictionGeneratorProps) {
     try {
       const result = await generatePrediction(method)
       setPrediction(result)
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro",
         description: "Falha ao gerar previsão. Tente novamente.",
@@ -48,7 +44,7 @@ export function PredictionGenerator({ userId }: PredictionGeneratorProps) {
         title: "Sucesso",
         description: "Previsão salva com sucesso!",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro",
         description: "Falha ao salvar previsão. Tente novamente.",

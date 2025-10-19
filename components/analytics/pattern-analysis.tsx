@@ -4,9 +4,10 @@ import { useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts"
+import type { LotteryResult } from "@/lib/types"
 
 interface PatternAnalysisProps {
-  results: any[]
+  results: LotteryResult[]
 }
 
 export function PatternAnalysis({ results }: PatternAnalysisProps) {

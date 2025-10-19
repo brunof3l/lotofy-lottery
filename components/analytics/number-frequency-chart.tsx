@@ -2,9 +2,10 @@
 
 import { useMemo } from "react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import type { LotteryResult } from "@/lib/types"
 
 interface NumberFrequencyChartProps {
-  results: any[]
+  results: LotteryResult[]
 }
 
 export function NumberFrequencyChart({ results }: NumberFrequencyChartProps) {
@@ -62,7 +63,7 @@ export function NumberFrequencyChart({ results }: NumberFrequencyChartProps) {
           <XAxis dataKey="number" tick={{ fontSize: 10 }} interval={0} className="text-xs sm:text-sm" />
           <YAxis tick={{ fontSize: 10 }} className="text-xs sm:text-sm" />
           <Tooltip
-            formatter={(value: number, name: string) => [
+            formatter={(value: number) => [
               `${value} vezes (${frequencyData.find((d) => d.frequency === value)?.percentage}%)`,
               "Frequência",
             ]}

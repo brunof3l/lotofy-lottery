@@ -6,11 +6,7 @@ import { Clock, Target } from "lucide-react"
 import { useUserPredictions } from "@/lib/hooks/use-lottery-data"
 import { Skeleton } from "@/components/ui/skeleton"
 
-interface UserPredictionsProps {
-  userId: string
-}
-
-export function UserPredictions({ userId }: UserPredictionsProps) {
+export function UserPredictions() {
   const { predictions, loading, error } = useUserPredictions()
 
   if (loading) {

@@ -1,4 +1,5 @@
 // lib/services/caixa-api.ts
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 export interface CaixaLotofacilResult {
   loteria: string
@@ -7,16 +8,16 @@ export interface CaixaLotofacilResult {
   local: string
   dezenasOrdemSorteio: string[]
   dezenas: string[]
-  trevos: any[]
-  timeCoracao: any
-  mesSorte: any
+  trevos: unknown[]
+  timeCoracao: unknown
+  mesSorte: unknown
   premiacoes: Array<{
     descricao: string
     faixa: number
     ganhadores: number
     valorPremio: number
   }>
-  estadosPremiados: any[]
+  estadosPremiados: unknown[]
   observacao: string
   acumulou: boolean
   proximoConcurso: number
@@ -138,7 +139,7 @@ export class CaixaApiService {
   /**
    * Verifica se um concurso já existe no banco
    */
-  static async checkContestExists(contestNumber: number, supabase: any): Promise<boolean> {
+  static async checkContestExists(contestNumber: number, supabase: SupabaseClient): Promise<boolean> {
     try {
       const { data, error } = await supabase
         .from('lottery_results')
@@ -156,7 +157,7 @@ export class CaixaApiService {
   /**
    * Sincroniza o último resultado com o banco de dados
    */
-  static async syncLatestResult(supabase: any): Promise<{
+  static async syncLatestResult(supabase: SupabaseClient): Promise<{
     success: boolean
     data?: ProcessedLotofacilResult
     message: string
@@ -184,7 +185,7 @@ export class CaixaApiService {
       }
 
       // Inserir no banco
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('lottery_results')
         .upsert({
           contest_number: latestResult.contest_number,
@@ -197,7 +198,7 @@ export class CaixaApiService {
       if (error) {
         return {
           success: false,
-          message: (error as any)?.message || 'Erro de escrita no Supabase (talvez RLS sem service role)'
+          message: `Erro ao sincronizar: ${error instanceof Error ? error.message : String(error)}`
         }
       }
 
@@ -207,10 +208,9 @@ export class CaixaApiService {
         message: `Concurso ${latestResult.contest_number} sincronizado com sucesso`
       }
     } catch (error) {
-      console.error('Erro ao sincronizar último resultado:', error)
       return {
         success: false,
-        message: `Erro ao sincronizar: ${error}`
+        message: `Erro ao sincronizar: ${error instanceof Error ? error.message : String(error)}`
       }
     }
   }

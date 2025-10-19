@@ -12,16 +12,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { LogOut, Settings, User, Menu, Target } from "lucide-react"
+import { LogOut, Settings, User as UserIcon, Menu, Target } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import type { User, UserProfile } from "@/lib/types"
 
 interface DashboardHeaderProps {
-  user: any
-  profile: any
+  user: User
+  profile: UserProfile | null
 }
 
 export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
@@ -137,7 +138,7 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
                   <Avatar className="h-8 w-8">
                     <AvatarInitials>{profile?.full_name?.charAt(0) || user.email?.charAt(0) || "U"}</AvatarInitials>
                     <AvatarFallback>
-                      <User className="h-4 w-4" />
+                      <UserIcon className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
                 </Button>

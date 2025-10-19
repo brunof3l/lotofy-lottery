@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { CaixaApiService } from "@/lib/services/caixa-api"
 
 export const dynamic = "force-dynamic"
 
 // Agora sem exigir autenticação e usando service role no servidor
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const supabase = createAdminClient()
 
@@ -34,12 +34,12 @@ export async function POST(request: NextRequest) {
         error: "Erro interno do servidor",
         message: error instanceof Error ? error.message : "Erro desconhecido",
       },
-      { status: 500 }
+        { status: 500 }
     )
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = createAdminClient()
 

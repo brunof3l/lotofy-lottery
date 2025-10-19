@@ -1,12 +1,10 @@
-import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+import { MobileLayout } from "@/components/mobile/mobile-layout"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { PrizeChecker } from "@/components/dashboard/prize-checker"
 import { AdvancedPredictionGenerator } from "@/components/dashboard/advanced-prediction-generator"
 import { UserPredictions } from "@/components/dashboard/user-predictions"
-import { PrizeChecker } from "@/components/dashboard/prize-checker"
-import { MobileLayout } from "@/components/mobile/mobile-layout"
-
-export const dynamic = "force-dynamic"
 
 export default async function PredictionsPage() {
   const supabase = await createClient()
@@ -35,17 +33,17 @@ export default async function PredictionsPage() {
 
             <div className="space-y-6 sm:space-y-8">
               {/* Verificador de Prêmios */}
-              <PrizeChecker userId={data.user.id} />
+              <PrizeChecker />
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                 {/* Gerador de Previsões */}
                 <div className="space-y-6">
-                  <AdvancedPredictionGenerator userId={data.user.id} />
+                  <AdvancedPredictionGenerator />
                 </div>
 
                 {/* Histórico de Previsões */}
                 <div className="space-y-6">
-                  <UserPredictions userId={data.user.id} />
+                  <UserPredictions />
                 </div>
               </div>
             </div>
