@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { method } = body
+    const { method, recency_alpha } = body
+    const alpha = typeof recency_alpha === "number" && Number.isFinite(recency_alpha) ? recency_alpha : 1.6
 
     // Get number statistics for intelligent prediction
     const { data: stats, error: statsError } = await supabase
@@ -31,24 +32,24 @@ export async function POST(request: NextRequest) {
 
     switch (method) {
       case "statistical":
-        // Use frequency-based selection
-        prediction = generateStatisticalPrediction(statsTyped)
-        confidence = 0.85
+        // Use frequency + strong recency weighting
+        prediction = generateStatisticalPrediction(statsTyped, alpha)
+        confidence = 0.86
         break
       case "ai":
-        // Simulate AI prediction (in real app, this would call ML model)
+        // Simulate AI prediction (placeholder)
         prediction = generateAIPrediction(statsTyped)
         confidence = 0.78
         break
       case "hot":
-        // Focus on hot numbers
-        prediction = generateHotNumbersPrediction(statsTyped)
-        confidence = 0.72
+        // Focus on hot numbers with recency bias
+        prediction = generateHotNumbersPrediction(statsTyped, alpha)
+        confidence = 0.74
         break
       case "balanced":
-        // Balanced approach
-        prediction = generateBalancedPrediction()
-        confidence = 0.8
+        // Balanced approach with recency bias per faixa
+        prediction = generateBalancedPrediction(statsTyped, alpha)
+        confidence = 0.82
         break
       default:
         prediction = generateRandomPrediction()
@@ -68,11 +69,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function generateStatisticalPrediction(stats: NumberStatistic[]): number[] {
-  // Select numbers based on frequency and recency
+function generateStatisticalPrediction(stats: NumberStatistic[], alpha: number): number[] {
+  // Weighted by frequency and strong recency (days_since_last_draw)
   const weighted = stats.map((stat) => ({
     number: stat.number_value,
-    weight: stat.frequency * (1 / Math.max(stat.days_since_last_draw, 1)),
+    weight: (stat.frequency + 1) * Math.pow(1 / Math.max(stat.days_since_last_draw, 1), alpha),
   }))
 
   weighted.sort((a, b) => b.weight - a.weight)
@@ -80,16 +81,17 @@ function generateStatisticalPrediction(stats: NumberStatistic[]): number[] {
   const prediction: number[] = []
   const used = new Set<number>()
 
-  // Take top weighted numbers with some randomization
+  // Choose top weighted numbers, with slight randomness to avoid overfitting
   for (let i = 0; i < weighted.length && prediction.length < 15; i++) {
-    const shouldInclude = Math.random() < 0.7 || prediction.length < 10
+    const includeBias = 0.75 // slightly higher inclusion chance
+    const shouldInclude = Math.random() < includeBias || prediction.length < 10
     if (shouldInclude && !used.has(weighted[i].number)) {
       prediction.push(weighted[i].number)
       used.add(weighted[i].number)
     }
   }
 
-  // Fill remaining slots randomly
+  // Fill remaining slots randomly (ensuring uniqueness)
   while (prediction.length < 15) {
     const num = Math.floor(Math.random() * 25) + 1
     if (!used.has(num)) {
@@ -102,7 +104,7 @@ function generateStatisticalPrediction(stats: NumberStatistic[]): number[] {
 }
 
 function generateAIPrediction(stats: NumberStatistic[]): number[] {
-  // Simulate AI prediction with pattern recognition
+  // Simulated AI prediction using hot/cold status only (placeholder)
   const hotNumbers = stats.filter((s) => s.hot_cold_status === "hot").map((s) => s.number_value)
   const neutralNumbers = stats.filter((s) => s.hot_cold_status === "neutral").map((s) => s.number_value)
   const coldNumbers = stats.filter((s) => s.hot_cold_status === "cold").map((s) => s.number_value)
@@ -110,12 +112,10 @@ function generateAIPrediction(stats: NumberStatistic[]): number[] {
   const prediction: number[] = []
   const used = new Set<number>()
 
-  // 60% hot, 30% neutral, 10% cold
   const hotCount = Math.floor(15 * 0.6)
   const neutralCount = Math.floor(15 * 0.3)
   const coldCount = 15 - hotCount - neutralCount
 
-  // Add hot numbers
   for (let i = 0; i < hotCount && hotNumbers.length > 0; i++) {
     const num = hotNumbers[Math.floor(Math.random() * hotNumbers.length)]
     if (!used.has(num)) {
@@ -123,8 +123,6 @@ function generateAIPrediction(stats: NumberStatistic[]): number[] {
       used.add(num)
     }
   }
-
-  // Add neutral numbers
   for (let i = 0; i < neutralCount && neutralNumbers.length > 0; i++) {
     const num = neutralNumbers[Math.floor(Math.random() * neutralNumbers.length)]
     if (!used.has(num)) {
@@ -132,8 +130,6 @@ function generateAIPrediction(stats: NumberStatistic[]): number[] {
       used.add(num)
     }
   }
-
-  // Add cold numbers
   for (let i = 0; i < coldCount && coldNumbers.length > 0; i++) {
     const num = coldNumbers[Math.floor(Math.random() * coldNumbers.length)]
     if (!used.has(num)) {
@@ -142,7 +138,6 @@ function generateAIPrediction(stats: NumberStatistic[]): number[] {
     }
   }
 
-  // Fill remaining slots
   while (prediction.length < 15) {
     const num = Math.floor(Math.random() * 25) + 1
     if (!used.has(num)) {
@@ -154,22 +149,27 @@ function generateAIPrediction(stats: NumberStatistic[]): number[] {
   return prediction
 }
 
-function generateHotNumbersPrediction(stats: NumberStatistic[]): number[] {
-  const hotNumbers = stats
+function generateHotNumbersPrediction(stats: NumberStatistic[], alpha: number): number[] {
+  // Sort hot by combined weight (frequency + strong recency)
+  const hotWeighted = stats
     .filter((s) => s.hot_cold_status === "hot")
-    .sort((a, b) => b.frequency - a.frequency)
-    .map((s) => s.number_value)
+    .map((s) => ({
+      number: s.number_value,
+      weight: (s.frequency + 1) * Math.pow(1 / Math.max(s.days_since_last_draw, 1), alpha),
+    }))
+    .sort((a, b) => b.weight - a.weight)
 
   const prediction: number[] = []
   const used = new Set<number>()
 
-  // Use mostly hot numbers
-  for (let i = 0; i < Math.min(12, hotNumbers.length); i++) {
-    prediction.push(hotNumbers[i])
-    used.add(hotNumbers[i])
+  for (let i = 0; i < Math.min(12, hotWeighted.length); i++) {
+    const n = hotWeighted[i].number
+    if (!used.has(n)) {
+      prediction.push(n)
+      used.add(n)
+    }
   }
 
-  // Fill remaining with random
   while (prediction.length < 15) {
     const num = Math.floor(Math.random() * 25) + 1
     if (!used.has(num)) {
@@ -181,12 +181,11 @@ function generateHotNumbersPrediction(stats: NumberStatistic[]): number[] {
   return prediction
 }
 
-function generateBalancedPrediction(): number[] {
+function generateBalancedPrediction(stats: NumberStatistic[], alpha: number): number[] {
   const prediction: number[] = []
   const used = new Set<number>()
 
-  // Balanced selection across all ranges
-  const ranges = [
+  const ranges: [number, number][] = [
     [1, 5],
     [6, 10],
     [11, 15],
@@ -194,19 +193,35 @@ function generateBalancedPrediction(): number[] {
     [21, 25],
   ]
 
-  // Select 3 numbers from each range
-  ranges.forEach(([start, end]) => {
-    const rangeCount = 3
+  // For each range, pick top by recency-weighted score
+  for (const [start, end] of ranges) {
+    const candidates = stats
+      .filter((s) => s.number_value >= start && s.number_value <= end)
+      .map((s) => ({
+        number: s.number_value,
+        weight: (s.frequency + 1) * Math.pow(1 / Math.max(s.days_since_last_draw, 1), alpha),
+      }))
+      .sort((a, b) => b.weight - a.weight)
+
     let added = 0
-    while (added < rangeCount) {
-      const num = Math.floor(Math.random() * (end - start + 1)) + start
-      if (!used.has(num)) {
-        prediction.push(num)
-        used.add(num)
+    for (const c of candidates) {
+      if (added >= 3) break
+      if (!used.has(c.number)) {
+        prediction.push(c.number)
+        used.add(c.number)
         added++
       }
     }
-  })
+  }
+
+  // If sum less than 15 due to missing stats, fill randomly
+  while (prediction.length < 15) {
+    const num = Math.floor(Math.random() * 25) + 1
+    if (!used.has(num)) {
+      prediction.push(num)
+      used.add(num)
+    }
+  }
 
   return prediction
 }

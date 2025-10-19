@@ -139,7 +139,7 @@ export function useGeneratePrediction() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const generatePrediction = async (method: string) => {
+  const generatePrediction = async (method: string, options?: { recencyAlpha?: number }) => {
     setLoading(true)
     setError(null)
 
@@ -147,7 +147,7 @@ export function useGeneratePrediction() {
       const response = await fetch("/api/generate-prediction", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ method }),
+        body: JSON.stringify({ method, recency_alpha: options?.recencyAlpha }),
       })
 
       const data = await response.json()

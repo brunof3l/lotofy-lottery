@@ -29,6 +29,7 @@ export function AdvancedPredictionGenerator() {
   const [includeColdNumbers, setIncludeColdNumbers] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<string>("generate")
   const [nextContest, setNextContest] = useState<number | null>(null)
+  const [recencyAlpha, setRecencyAlpha] = useState<number>(1.6)
   
   const { generatePrediction, loading: generating } = useGeneratePrediction()
   const { savePrediction } = useUserPredictions()
@@ -55,7 +56,7 @@ export function AdvancedPredictionGenerator() {
       const newPredictions: GeneratedPrediction[] = []
       
       for (let i = 0; i < quantity; i++) {
-        const result = await generatePrediction(method) as { numbers: number[]; method: string; confidence: number }
+        const result = await generatePrediction(method, { recencyAlpha }) as { numbers: number[]; method: string; confidence: number }
         newPredictions.push({
           numbers: result.numbers,
           confidence: result.confidence,
@@ -227,6 +228,20 @@ export function AdvancedPredictionGenerator() {
                       onCheckedChange={setIncludeColdNumbers}
                     />
                   </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="recency-alpha">Peso de Recência (alpha)</Label>
+                  <Input
+                    id="recency-alpha"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="5"
+                    value={recencyAlpha}
+                    onChange={(e) => setRecencyAlpha(Number(e.target.value) || 0)}
+                  />
+                  <p className="text-xs text-muted-foreground">Aumente para favorecer números sorteados recentemente.</p>
                 </div>
               </div>
             </div>

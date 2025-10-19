@@ -18,8 +18,9 @@ CREATE POLICY "Users can insert their own profile" ON public.profiles
 CREATE POLICY "Anyone can view lottery results" ON public.lottery_results
   FOR SELECT USING (true);
 
-CREATE POLICY "Only authenticated users can insert lottery results" ON public.lottery_results
-  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+-- Permite que qualquer um insira resultados, ideal para uma API pública ou um script de servidor.
+CREATE POLICY "Anyone can insert lottery results" ON public.lottery_results
+  FOR INSERT WITH CHECK (true);
 
 -- User predictions policies
 CREATE POLICY "Users can view their own predictions" ON public.user_predictions
